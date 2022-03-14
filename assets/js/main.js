@@ -1,6 +1,10 @@
 // Initialize Board
 let boardState = JSON.parse(JSON.stringify(initialBoard))
 
+// Declare global variables
+let turnCount = 0
+let selected = ''
+
 // Draw initial board state
 drawBoard(boardState)
 

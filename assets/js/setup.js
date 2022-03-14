@@ -60,6 +60,7 @@ function drawBoard(boardState) {
         for (let j = 0; j < boardState[i].length; j++) {
             console.log('at', `${rows[i+1]}${j+1}`, 'putting', boardState[i][j])
             document.getElementById(`${rows[i+1]}${j+1}`).textContent = pieces[boardState[i][j]]
+            document.getElementById(`${rows[i+1]}${j+1}`).setAttribute('data-content', boardState[i][j])
         }
     }
 }
@@ -73,6 +74,18 @@ function setEvents(boardState) {
     }
 }
 
-function squareClick(e) {
-    console.log('hi', this.id)
+function squareClick() {
+    console.log('hi', this.id, this.textContent, this.getAttribute('data-content'))
+    console.log(canSelect(this.getAttribute('data-content')))
+    if (!selected) {
+        if (canSelect(this.getAttribute('data-content'))) {
+            selected = [this.getAttribute('data-content'), this.id]
+            this.classList.add('selected')
+            console.log(selected)
+        }
+    }
+    else {
+        // try move
+        console.log('move to', this.id)
+    }
 }
