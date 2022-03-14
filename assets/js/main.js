@@ -1,1 +1,1 @@
-// Stub
+// Initialize board

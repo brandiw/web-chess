@@ -1,5 +1,42 @@
 #board {
+    display: inline-block;
+}
+
+/* #status {
+    border: 1px solid blue;
+} */
+
+.square {
+    width: 100px;
+    height: 100px;
     border: 1px solid black;
-    width: 640;
-    height: 640;
+    display: inline-block;
+}
+
+#row1 .square:nth-child(odd),
+#row3 .square:nth-child(odd),
+#row5 .square:nth-child(odd),
+#row7 .square:nth-child(odd) {
+    background-color: gray;
+}
+
+#row1 .square:nth-child(even),
+#row3 .square:nth-child(even),
+#row5 .square:nth-child(even),
+#row7 .square:nth-child(even) {
+    background-color: palevioletred;
+}
+
+#row2 .square:nth-child(odd),
+#row4 .square:nth-child(odd),
+#row6 .square:nth-child(odd),
+#row8 .square:nth-child(odd) {
+    background-color: palevioletred;
+}
+
+#row2 .square:nth-child(even),
+#row4 .square:nth-child(even),
+#row6 .square:nth-child(even),
+#row8 .square:nth-child(even) {
+    background-color: gray;
 }
