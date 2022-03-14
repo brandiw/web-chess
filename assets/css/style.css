@@ -1,6 +1,33 @@
 #board {
     display: inline-block;
-    min-width: 950px;
+}
+
+#game {
+    min-width: 950px;   
+}
+
+#status {
+    display: inline-block;
+    vertical-align: top;
+}
+
+#status h3 {
+    margin: 0;
+    text-align: center;
+}
+
+#prompts {
+    display: block;
+}
+
+#timer-box {
+    border: 1px solid #333;
+}
+
+#black-time,
+#white-time {
+    text-align: center;
+    font-weight: bold;
 }
 
 .square {

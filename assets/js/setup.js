@@ -54,3 +54,28 @@ function setEvents(boardState) {
         }
     }
 }
+
+function startTimer() {
+    timer = setInterval(tick, 1000)
+}
+
+function tick() {
+    if (turnCount % 2 === 0) {
+        whiteTime += 1
+        let seconds = whiteTime % 60
+        let minutes = Math.floor(whiteTime / 60)
+        seconds = seconds < 10 ? '0' + seconds : seconds
+        minutes = minutes < 10 ? '0' + minutes : minutes
+        document.getElementById('white-time-seconds').textContent = seconds
+        document.getElementById('white-time-minutes').textContent = minutes
+    }
+    else {
+        blackTime += 1
+        let seconds = blackTime % 60
+        let minutes = Math.floor(blackTime / 60)
+        seconds = seconds < 10 ? '0' + seconds : seconds
+        minutes = minutes < 10 ? '0' + minutes : minutes
+        document.getElementById('black-time-seconds').textContent = seconds
+        document.getElementById('black-time-minutes').textContent = minutes
+    }
+}

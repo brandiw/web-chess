@@ -68,5 +68,5 @@ function executeMove(endLoc) {
 
     // Prompt next user
     let message = turnCount % 2 === 0 ? 'Go White!' : 'Go Black!'
-    console.log(message)
+    document.getElementById('message').textContent = message
 }

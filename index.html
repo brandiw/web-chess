@@ -11,6 +11,27 @@
     <h1>Web Chess</h1>
     <hr>
     <div id="game">
+        <div id="status">
+            <h2>Timer</h2>
+            <h3>White Time</h3>
+            <div id="timer-box">
+                <div id="white-time">
+                    <span id="white-time-hours">00</span>:
+                    <span id="white-time-minutes">00</span>:
+                    <span id="white-time-seconds">00</span>
+                </div>
+                <hr><hr>
+                <div id="black-time">
+                    <span id="black-time-hours">00</span>:
+                    <span id="black-time-minutes">00</span>:
+                    <span id="black-time-seconds">00</span>
+                </div>
+            </div>
+            <h3>Black Time</h3>
+            <hr>
+            <h2>Game State</h2>
+            <div id="status-update"></div>
+        </div>
         <div id="board">
             <div>
                 <div class="grid"></div>
@@ -122,11 +143,12 @@
                 <div class="grid">G</div>
                 <div class="grid">H</div>
             </div>
-        </div>
-        <div id="status">
-            <h2>Game State</h2>
-            <div id="status-update"></div>
-        </div>
+        </div>    
+    </div>
+    <div id="prompts">
+        <h2 id="message">White's Turn</h2>
+        <h3>Captured Pieces:</h3>
+        <div id="captured">None</div>
     </div>
     <script src="./assets/js/setup.js"></script>
     <script src="./assets/js/moves.js"></script>
