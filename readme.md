@@ -7,6 +7,7 @@ A two player chess game that can be played on the web.
 ### General and Design
 
 - There should be two chess players (black and white) taking alternating turns
+- The game is played on an 8x8 grid
 - Time should be kept for each of the players during their own turn
 - Time expires at 90 minutes for each player
 - Moves are tracked in order to tell the story of the game
@@ -28,6 +29,7 @@ A two player chess game that can be played on the web.
 - The game should detect when a king piece is in check
 - If a king is in check, getting out of check is prioritized over all other moves
 - The game should detect a checkmate
+- After 50 moves, any player may request a draw on their turn
 
 ### Movements
 
@@ -63,3 +65,11 @@ A two player chess game that can be played on the web.
 - Must move when they are put into check
 - The game is lost when that player's king piece is unable to move out of check, a condition known as "checkmate"
 
+## Considerations
+
+- 55% of chess games end in a draw. Is it possible to programmatically detect a draw state before the 50 move limit?
+- Should there be a teaching feature? 
+    - A beginner mode that walks through basic legal moves?
+    - An intermediate mode that discusses special moves such as the caste, the queen's gambit, sicilian defense, etc.
+- Should there be an AI mode to practice against?
+- Should we highlight legal moves when a pieces?
