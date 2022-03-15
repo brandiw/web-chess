@@ -1,6 +1,81 @@
 function isLegalMove(piece, startLoc, endLoc) {
-    // stub
-    return true 
+    // check if the move is legal based on the piece
+    console.log('piece', piece, 'startLoc', startLoc, 'destination', endLoc)
+    if (piece.substring(1) == 'pawn') {
+        let moveSet = getLegalPawnMoves(piece, startLoc)
+        return moveSet.includes(endLoc) ? true : false 
+    }
+    else {
+        return true 
+    }
+}
+
+function getLegalPawnMoves(piece, location) {
+    let moveSet = []
+    let locationLetter = reverseRows[location[0]]
+    let locationNumber = location[1]
+
+    // Check forward spot empty
+    if (piece[0] == 'w') {
+        // Forward is down
+        let newLocation = rows[locationLetter] + (locationNumber - 1)
+        if (!document.getElementById(newLocation).getAttribute('data-content')) {
+            moveSet.push(newLocation)
+
+            // Check two spots forward
+            if (initialBoard[locationLetter-1][locationNumber-1] == 'wpawn') {
+                let newLocation = rows[locationLetter] + (locationNumber - 2)
+                if (!document.getElementById(newLocation).getAttribute('data-content')) {
+                    moveSet.push(newLocation)
+                }
+            }
+        }
+
+        // Check diagonals
+        if (locationLetter != 1) {
+            let diag1 = checkSpot(rows[locationLetter - 1] + (locationNumber - 1))
+            if (diag1 && diag1[0] == 'b') {
+                moveSet.push(rows[locationLetter - 1] + (locationNumber - 1))
+            }
+        }
+        if (locationLetter != 8) {
+            let diag2 = checkSpot(rows[locationLetter + 1] + (locationNumber - 1))
+            if (diag2 && diag2[0] == 'b') {
+                moveSet.push(rows[locationLetter + 1] + (locationNumber - 1))
+            }
+        }
+    }
+    else {
+        // Forward is up
+        let newLocation = rows[locationLetter] + (Number(locationNumber) + 1)
+        if (!document.getElementById(newLocation).getAttribute('data-content')) {
+            moveSet.push(newLocation)
+
+            // Check two spots forward
+            if (initialBoard[locationLetter-1][locationNumber-1] == 'bpawn') {
+                let newLocation = rows[locationLetter] + (Number(locationNumber) + 2)
+                if (!document.getElementById(newLocation).getAttribute('data-content')) {
+                    moveSet.push(newLocation)
+                }
+            }
+        }
+
+        // Check diagonals
+        if (locationLetter != 1) {
+            let diag1 = checkSpot(rows[locationLetter - 1] + (Number(locationNumber) + 1))
+            if (diag1 && diag1[0] == 'w') {
+                moveSet.push(rows[locationLetter - 1] + (Number(locationNumber) + 1))
+            }
+        }
+        if (locationLetter != 8) {
+            let diag2 = checkSpot(rows[locationLetter + 1] + (Number(locationNumber) + 1))
+            if (diag2 && diag2[0] == 'w') {
+                moveSet.push(rows[locationLetter + 1] + (Number(locationNumber) + 1))
+            }
+        }
+    }
+
+    return moveSet
 }
 
 function canSelect(loc) {
@@ -9,7 +84,6 @@ function canSelect(loc) {
 
     // Select only your own piece
     if (loc[0] != turn) {
-        console.log('You cannot select the other player or an empty spot')
         return false
     }
     else {
@@ -19,7 +93,6 @@ function canSelect(loc) {
 
 function squareClick() {
     console.log('hi', this.id, this.textContent, this.getAttribute('data-content'))
-    console.log(canSelect(this.getAttribute('data-content')))
     if (!selected) {
         if (canSelect(this.getAttribute('data-content'))) {
             selected = [this.id, this.getAttribute('data-content')]
@@ -33,8 +106,8 @@ function squareClick() {
         selected = null
     }
     else {
-        // try move
-        if (isLegalMove(this.id)) {
+        // Try to move
+        if (isLegalMove(selected[1], selected[0], this.id)) {
             executeMove(this.id)
         }
         else {
@@ -70,3 +143,7 @@ function executeMove(endLoc) {
     let message = turnCount % 2 === 0 ? 'Go White!' : 'Go Black!'
     document.getElementById('message').textContent = message
 }
+
+function checkSpot(location) {
+    return document.getElementById(location).getAttribute('data-content')
+} 

@@ -36,10 +36,20 @@ const rows = {
     8: 'h'
 }
 
+const reverseRows = {
+    'a': 1,
+    'b': 2,
+    'c': 3,
+    'd': 4,
+    'e': 5,
+    'f': 6,
+    'g': 7, 
+    'h': 8
+}
+
 function drawBoard(boardState) {
     for (let i = 0; i < boardState.length; i++) {
         for (let j = 0; j < boardState[i].length; j++) {
-            console.log('at', `${rows[i+1]}${j+1}`, 'putting', boardState[i][j])
             document.getElementById(`${rows[i+1]}${j+1}`).textContent = pieces[boardState[i][j]]
             document.getElementById(`${rows[i+1]}${j+1}`).setAttribute('data-content', boardState[i][j])
         }
@@ -49,7 +59,6 @@ function drawBoard(boardState) {
 function setEvents(boardState) {
     for (let i = 0; i < boardState.length; i++) {
         for (let j = 0; j < boardState[i].length; j++) {
-            console.log('at', boardState[i][j])
             document.getElementById(`${rows[i+1]}${j+1}`).addEventListener('click', squareClick)
         }
     }
