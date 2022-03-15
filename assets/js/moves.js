@@ -1,3 +1,16 @@
+function canSelect(loc) {
+    // Determine color by turn count
+    let turn = turnCount % 2 === 0 ? 'w' : 'b'
+
+    // Select only your own piece
+    if (loc[0] != turn) {
+        return false
+    }
+    else {
+        return true
+    }
+}
+
 function isLegalMove(piece, startLoc, endLoc) {
     // check if the move is legal based on the piece
     console.log('piece', piece, 'startLoc', startLoc, 'destination', endLoc)
@@ -76,19 +89,6 @@ function getLegalPawnMoves(piece, location) {
     }
 
     return moveSet
-}
-
-function canSelect(loc) {
-    // Determine color by turn count
-    let turn = turnCount % 2 === 0 ? 'w' : 'b'
-
-    // Select only your own piece
-    if (loc[0] != turn) {
-        return false
-    }
-    else {
-        return true
-    }
 }
 
 function squareClick() {
