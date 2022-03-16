@@ -1,4 +1,6 @@
 function canSelect(loc) {
+    if (!loc) return false
+    console.log('selecting', loc)
     // Determine color by turn count
     let turn = turnCount % 2 === 0 ? 'w' : 'b'
 
@@ -11,11 +13,11 @@ function canSelect(loc) {
     }
 }
 
-function isLegalMove(piece, startLoc, endLoc) {
+function isLegalMove(endLoc) {
     // check if the move is legal based on the piece
-    console.log('piece', piece, 'startLoc', startLoc, 'destination', endLoc)
-    if (piece.substring(1) == 'pawn') {
-        let moveSet = getLegalPawnMoves(piece, startLoc)
+    console.log('selected', selected.name, 'startLoc', selected.currentLoc, 'destination', endLoc)
+    if (selected.name == 'pawn') {
+        let moveSet = getLegalPawnMoves()
         return moveSet.includes(endLoc) ? true : false 
     }
     else {
@@ -23,91 +25,64 @@ function isLegalMove(piece, startLoc, endLoc) {
     }
 }
 
-function getLegalPawnMoves(piece, location) {
+function getLegalPawnMoves() {
     let moveSet = []
-    let locationLetter = reverseRows[location[0]]
-    let locationNumber = location[1]
+    let locationLetter = reverseRows[selected.currentLoc[0]]
+    let locationNumber = selected.currentLoc[1]
+    let forward = 1
+
+    if (selected.color == 'white') {
+        // Forward is down
+        forward = -1
+    }
 
     // Check forward spot empty
-    if (piece[0] == 'w') {
-        // Forward is down
-        let newLocation = rows[locationLetter] + (locationNumber - 1)
-        if (!document.getElementById(newLocation).getAttribute('data-content')) {
-            moveSet.push(newLocation)
+    let newLocation = rows[locationLetter] + (Number(locationNumber) + forward)
+    if (!document.getElementById(newLocation).getAttribute('data-content')) {
+        moveSet.push(newLocation)
 
-            // Check two spots forward
-            if (initialBoard[locationLetter-1][locationNumber-1] == 'wpawn') {
-                let newLocation = rows[locationLetter] + (locationNumber - 2)
-                if (!document.getElementById(newLocation).getAttribute('data-content')) {
-                    moveSet.push(newLocation)
-                }
-            }
-        }
-
-        // Check diagonals
-        if (locationLetter != 1) {
-            let diag1 = checkSpot(rows[locationLetter - 1] + (locationNumber - 1))
-            if (diag1 && diag1[0] == 'b') {
-                moveSet.push(rows[locationLetter - 1] + (locationNumber - 1))
-            }
-        }
-        if (locationLetter != 8) {
-            let diag2 = checkSpot(rows[locationLetter + 1] + (locationNumber - 1))
-            if (diag2 && diag2[0] == 'b') {
-                moveSet.push(rows[locationLetter + 1] + (locationNumber - 1))
-            }
-        }
-    }
-    else {
-        // Forward is up
-        let newLocation = rows[locationLetter] + (Number(locationNumber) + 1)
-        if (!document.getElementById(newLocation).getAttribute('data-content')) {
-            moveSet.push(newLocation)
-
-            // Check two spots forward
-            if (initialBoard[locationLetter-1][locationNumber-1] == 'bpawn') {
-                let newLocation = rows[locationLetter] + (Number(locationNumber) + 2)
-                if (!document.getElementById(newLocation).getAttribute('data-content')) {
-                    moveSet.push(newLocation)
-                }
-            }
-        }
-
-        // Check diagonals
-        if (locationLetter != 1) {
-            let diag1 = checkSpot(rows[locationLetter - 1] + (Number(locationNumber) + 1))
-            if (diag1 && diag1[0] == 'w') {
-                moveSet.push(rows[locationLetter - 1] + (Number(locationNumber) + 1))
-            }
-        }
-        if (locationLetter != 8) {
-            let diag2 = checkSpot(rows[locationLetter + 1] + (Number(locationNumber) + 1))
-            if (diag2 && diag2[0] == 'w') {
-                moveSet.push(rows[locationLetter + 1] + (Number(locationNumber) + 1))
+        // Check two spots forward
+        if (selected.currentLoc.join('') === selected.startLoc.join('')) {
+            let newLocation = rows[locationLetter] + (Number(locationNumber) + forward + forward)
+            if (!document.getElementById(newLocation).getAttribute('data-content')) {
+                moveSet.push(newLocation)
             }
         }
     }
 
+    // Check diagonals
+    if (locationLetter != 1) {
+        let diag1 = checkSpot(rows[locationLetter - 1] + (Number(locationNumber) + forward))
+        if (diag1 && diag1[0] !== selected.color[0]) {
+            moveSet.push(rows[locationLetter - 1] + (Number(locationNumber) + forward))
+        }
+    }
+    if (locationLetter != 8) {
+        let diag2 = checkSpot(rows[locationLetter + 1] + (Number(locationNumber) + forward))
+        if (diag2 && diag2[0] !== selected.color[0]) {
+            moveSet.push(rows[locationLetter + 1] + (Number(locationNumber) + forward))
+        }
+    }
+    console.log('legal move sets:', moveSet)
     return moveSet
 }
 
 function squareClick() {
-    console.log('hi', this.id, this.textContent, this.getAttribute('data-content'))
+    console.log('clicked on', this.id, 'selected is', selected)
     if (!selected) {
         if (canSelect(this.getAttribute('data-content'))) {
-            selected = [this.id, this.getAttribute('data-content')]
+            selected = selectFromBoard(this.id)
             this.classList.add('selected')
-            console.log(selected)
         }
     }
-    else if (this.id == selected[0]) {
+    else if (this.id == selected.currentLoc.join('')) {
         // Unselect element if already selected
         this.classList.remove('selected')
         selected = null
     }
     else {
         // Try to move
-        if (isLegalMove(selected[1], selected[0], this.id)) {
+        if (isLegalMove(this.id)) {
             executeMove(this.id)
         }
         else {
@@ -119,21 +94,28 @@ function squareClick() {
 function executeMove(endLoc) {
     // Update status line
     let newP = document.createElement('p') 
-    newP.textContent = `${selected[1].substring(1)} to ${endLoc}`
+    newP.textContent = `${selected.name} to ${endLoc}`
     document.getElementById('status-update').append(newP)
 
     // Update destination board state
     let destination = document.getElementById(endLoc)
-    destination.setAttribute('data-content', selected[1])
-    destination.textContent = pieces[selected[1]]
+    destination.setAttribute('data-content', selected.abbrev)
+    destination.textContent = pieces[selected.abbrev]
 
     // Remove departure spot info
-    let departure = document.getElementById(selected[0])
+    let departure = document.getElementById(selected.currentLoc.join(''))
     departure.setAttribute('data-content', '')
     departure.textContent = ''
 
-    // Deselect all
-    document.getElementById(selected[0]).classList.remove('selected')
+    // Deselect highlighted area
+    document.getElementById(selected.currentLoc.join('')).classList.remove('selected')
+
+    // Update board state and location
+    moveOnBoard(selected.currentLoc.join(''), endLoc)
+    selected.currentLoc[0] = endLoc[0]
+    selected.currentLoc[1] = endLoc[1]
+
+    // Make sure there is no selection
     selected = null
 
     // Update turn count

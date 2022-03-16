@@ -57,28 +57,28 @@
 #row3 .square:nth-child(odd),
 #row5 .square:nth-child(odd),
 #row7 .square:nth-child(odd) {
-    background-color: gray;
+    background-color: palevioletred;
 }
 
 #row1 .square:nth-child(even),
 #row3 .square:nth-child(even),
 #row5 .square:nth-child(even),
 #row7 .square:nth-child(even) {
-    background-color: palevioletred;
+    background-color: gray;
 }
 
 #row2 .square:nth-child(odd),
 #row4 .square:nth-child(odd),
 #row6 .square:nth-child(odd),
 #row8 .square:nth-child(odd) {
-    background-color: palevioletred;
+    background-color: gray;
 }
 
 #row2 .square:nth-child(even),
 #row4 .square:nth-child(even),
 #row6 .square:nth-child(even),
 #row8 .square:nth-child(even) {
-    background-color: gray;
+    background-color: palevioletred;
 }
 
 .selected {
