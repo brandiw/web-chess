@@ -8,7 +8,19 @@
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
-    <h1>Web Chess</h1>
+    <section id="header">
+        <div id="title">
+            <h1>Web Chess</h1>
+        </div>
+        <div id="options">
+            <span>Option:</span>
+            <button id="showToggle">Show Move Sets</button>
+            <span id="toggleStatus">On ✅</span>
+        </div>
+        <div id="avatar">
+            <h3>Jane Doe (1900)</h3>
+        </div>
+    </section>
     <hr>
     <div id="game">
         <div id="status">
@@ -148,7 +160,7 @@
     <div id="prompts">
         <h2 id="message">White's Turn</h2>
         <h3>Captured Pieces:</h3>
-        <div id="captured">None</div>
+        <div id="captured"></div>
     </div>
     <script src="./assets/js/setup.js"></script>
     <script src="./assets/js/moves.js"></script>

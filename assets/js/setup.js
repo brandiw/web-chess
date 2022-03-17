@@ -10,13 +10,13 @@ class Piece {
 
 const initialBoard = [
     [new Piece('black', 'rook', 'brook', ['a', 1]), new Piece('black', 'pawn', 'bpawn', ['a', 2]), , , , , new Piece('white', 'pawn', 'wpawn', ['a', 7]), new Piece('white', 'rook', 'wrook', ['a', 8])],
-    [new Piece('black', 'knight', 'bknight', ['b', 2]), new Piece('black', 'pawn', 'bpawn', ['b', 2]), , , , , new Piece('white', 'pawn', 'wpawn', ['b', 7]), new Piece('white', 'knight', 'wknight', ['b', 8])],
-    [new Piece('black', 'bishop', 'bbishop', ['c', 3]), new Piece('black', 'pawn', 'bpawn', ['c', 2]), , , , , new Piece('white', 'pawn', 'wpawn', ['c', 7]), new Piece('white', 'bishop', 'wbishop', ['c', 8])],
-    [new Piece('black', 'king', 'bking', ['d', 4]), new Piece('black', 'pawn', 'bpawn', ['d', 2]), , , , , new Piece('white', 'pawn', 'wpawn', ['d', 7]), new Piece('white', 'king', 'wking', ['d', 8])],
-    [new Piece('black', 'queen', 'bqueen', ['e', 5]), new Piece('black', 'pawn', 'bpawn', ['e', 2]), , , , , new Piece('white', 'pawn', 'wpawn', ['e', 7]), new Piece('white', 'queen', 'wqueen', ['e', 8])],
-    [new Piece('black', 'bishop', 'bbishop', ['f', 6]), new Piece('black', 'pawn', 'bpawn', ['f', 2]), , , , , new Piece('white', 'pawn', 'wpawn', ['f', 7]), new Piece('white', 'bishop', 'wbishop', ['f', 8])],
-    [new Piece('black', 'knight', 'bknight', ['g', 7]), new Piece('black', 'pawn', 'bpawn', ['g', 2]), , , , , new Piece('white', 'pawn', 'wpawn', ['g', 7]), new Piece('white', 'knight', 'wknight', ['g', 8])],
-    [new Piece('black', 'rook', 'brook', ['h', 8]), new Piece('black', 'pawn', 'bpawn', ['h', 2]), , , , , new Piece('white', 'pawn', 'wpawn', ['h', 7]), new Piece('white', 'rook', 'wrook', ['h', 8])]
+    [new Piece('black', 'knight', 'bknight', ['b', 1]), new Piece('black', 'pawn', 'bpawn', ['b', 2]), , , , , new Piece('white', 'pawn', 'wpawn', ['b', 7]), new Piece('white', 'knight', 'wknight', ['b', 8])],
+    [new Piece('black', 'bishop', 'bbishop', ['c', 1]), new Piece('black', 'pawn', 'bpawn', ['c', 2]), , , , , new Piece('white', 'pawn', 'wpawn', ['c', 7]), new Piece('white', 'bishop', 'wbishop', ['c', 8])],
+    [new Piece('black', 'king', 'bking', ['d', 1]), new Piece('black', 'pawn', 'bpawn', ['d', 2]), , , , , new Piece('white', 'pawn', 'wpawn', ['d', 7]), new Piece('white', 'king', 'wking', ['d', 8])],
+    [new Piece('black', 'queen', 'bqueen', ['e', 1]), new Piece('black', 'pawn', 'bpawn', ['e', 2]), , , , , new Piece('white', 'pawn', 'wpawn', ['e', 7]), new Piece('white', 'queen', 'wqueen', ['e', 8])],
+    [new Piece('black', 'bishop', 'bbishop', ['f', 1]), new Piece('black', 'pawn', 'bpawn', ['f', 2]), , , , , new Piece('white', 'pawn', 'wpawn', ['f', 7]), new Piece('white', 'bishop', 'wbishop', ['f', 8])],
+    [new Piece('black', 'knight', 'bknight', ['g', 1]), new Piece('black', 'pawn', 'bpawn', ['g', 2]), , , , , new Piece('white', 'pawn', 'wpawn', ['g', 7]), new Piece('white', 'knight', 'wknight', ['g', 8])],
+    [new Piece('black', 'rook', 'brook', ['h', 1]), new Piece('black', 'pawn', 'bpawn', ['h', 2]), , , , , new Piece('white', 'pawn', 'wpawn', ['h', 7]), new Piece('white', 'rook', 'wrook', ['h', 8])]
 ]
 const pieces = {
     'brook': '♜', 
@@ -114,10 +114,18 @@ function moveOnBoard(startLoc, endLoc) {
     let endLetter = reverseRows[endLoc[0]]
     let endNum = endLoc[1]
     
-    // Swap
-    let temp = boardState[startLetter-1][startNum-1]
-    boardState[endLetter-1][endNum-1] = temp
+    // keep value
+    let temp = boardState[endLetter-1][endNum-1]
+
+    // move piece
+    boardState[endLetter-1][endNum-1] = boardState[startLetter-1][startNum-1]
+
+    // mark old spot empty
     boardState[startLetter-1][startNum-1] = null
+
+    if (temp) {
+        capturedPieces.push(temp)
+    }
 
     console.log('board state is...', boardState)
 }

@@ -1,6 +1,7 @@
 function canSelect(loc) {
+    // if empty don't select
     if (!loc) return false
-    console.log('selecting', loc)
+
     // Determine color by turn count
     let turn = turnCount % 2 === 0 ? 'w' : 'b'
 
@@ -15,14 +16,136 @@ function canSelect(loc) {
 
 function isLegalMove(endLoc) {
     // check if the move is legal based on the piece
-    console.log('selected', selected.name, 'startLoc', selected.currentLoc, 'destination', endLoc)
     if (selected.name == 'pawn') {
         let moveSet = getLegalPawnMoves()
         return moveSet.includes(endLoc) ? true : false 
     }
+    else if (selected.name == 'knight') {
+        let moveSet = getLegalKnightMoves()
+        return moveSet.includes(endLoc) ? true : false
+    }
+    else if (selected.name == 'rook') {
+        let moveSet = getLegalRookMoves()
+        return moveSet.includes(endLoc) ? true : false
+    }
     else {
         return true 
     }
+}
+
+function getLegalRookMoves() {
+    let moveSet = []
+    let locationLetter = reverseRows[selected.currentLoc[0]]
+    let locationNumber = selected.currentLoc[1]
+    
+    // Check up
+    for (let i = Number(locationNumber); i < 8; i++) {
+        let nextSpace = rows[locationLetter] + (Number(i) + 1)
+        if (spaceEmpty(nextSpace)) {
+            moveSet.push(nextSpace)
+        }
+        else if (spaceEnemy(nextSpace)) {
+            moveSet.push(nextSpace)
+            break
+        }
+        else {
+            break
+        }
+    }
+    // Check down
+    for (let i = Number(locationNumber); i > 1; i--) {
+        let nextSpace = rows[locationLetter] + (Number(i) - 1)
+        if (spaceEmpty(nextSpace)) {
+            moveSet.push(nextSpace)
+        }
+        else if (spaceEnemy(nextSpace)) {
+            moveSet.push(nextSpace)
+            break
+        }
+        else {
+            break
+        }
+    }
+    // Check right
+    for (let i = Number(locationLetter); i < 8; i++) {
+        let nextSpace = rows[Number(i)+1] + locationNumber.toString()
+        if (spaceEmpty(nextSpace)) {
+            moveSet.push(nextSpace)
+        }
+        else if (spaceEnemy(nextSpace)) {
+            moveSet.push(nextSpace)
+            break
+        }
+        else {
+            break
+        }
+    }
+    // Check left
+    for (let i = Number(locationLetter); i > 1; i--) {
+        let nextSpace = rows[Number(i)-1] + locationNumber.toString()
+        if (spaceEmpty(nextSpace)) {
+            moveSet.push(nextSpace)
+        }
+        else if (spaceEnemy(nextSpace)) {
+            moveSet.push(nextSpace)
+            break
+        }
+        else {
+            break
+        }
+    }
+
+    return moveSet
+}
+
+function getLegalKnightMoves() {
+    let moveSet = []
+    let locationLetter = reverseRows[selected.currentLoc[0]]
+    let locationNumber = selected.currentLoc[1]
+    
+    // 1 left, 2 up
+    if (locationLetter - 1 >= 1 && Number(locationNumber) + 2 <= 8 && 
+        spaceEmptyOrEnemy(rows[locationLetter-1] + (Number(locationNumber)+2))) {
+        moveSet.push(rows[locationLetter-1] + (Number(locationNumber)+2))
+    }
+    // 1 right, 2 up
+    if (locationLetter + 1 <= 8 && Number(locationNumber) + 2 <= 8 && 
+        spaceEmptyOrEnemy(rows[locationLetter+1] + (Number(locationNumber)+2))) {
+        moveSet.push(rows[locationLetter+1] + (Number(locationNumber)+2))
+    }
+    // 1 left, 2 down
+    if (locationLetter - 1 >= 1 && Number(locationNumber) - 2 >= 1 &&
+        spaceEmptyOrEnemy(rows[locationLetter-1] + (Number(locationNumber-2)))) {
+        moveSet.push(rows[locationLetter-1] + (Number(locationNumber-2)))
+    }
+    // 1 right, 2 down
+    if (locationLetter + 1 <= 8 && Number(locationNumber) - 2 >= 1 && 
+        spaceEmptyOrEnemy(rows[locationLetter+1] + (Number(locationNumber-2)))) {
+        moveSet.push(rows[locationLetter+1] + (Number(locationNumber-2)))
+    }
+    // 2 left, 1 up
+    if (locationLetter - 2 >= 1 && Number(locationNumber) + 1 <= 8 && 
+        spaceEmptyOrEnemy(rows[locationLetter-2] + (Number(locationNumber)+1))) {
+        moveSet.push(rows[locationLetter-2] + (Number(locationNumber)+1))
+    }
+    // 2 right, 1 up
+    if (locationLetter + 2 <= 8 && Number(locationNumber) + 1 <= 8 && 
+        spaceEmptyOrEnemy(rows[locationLetter+2] + (Number(locationNumber)+1))) {
+        moveSet.push(rows[locationLetter+2] + (Number(locationNumber)+1))
+    }
+    // 2 left, 1 down
+    if (locationLetter - 2 >= 1 && Number(locationNumber) - 1 >= 1 &&
+        spaceEmptyOrEnemy(rows[locationLetter-2] + (Number(locationNumber-1)))) {
+        moveSet.push(rows[locationLetter-2] + (Number(locationNumber-1)))
+    }
+    // 2 right, 1 down
+    if (locationLetter + 2 <= 8 && Number(locationNumber) - 1 >= 1 &&
+        spaceEmptyOrEnemy(rows[locationLetter+2] + (Number(locationNumber-1)))) {
+        console.log(checkSpot(rows[locationLetter+2] + (Number(locationNumber-1))))
+        moveSet.push(rows[locationLetter+2] + (Number(locationNumber-1)))
+    }
+
+    return moveSet
 }
 
 function getLegalPawnMoves() {
@@ -63,7 +186,7 @@ function getLegalPawnMoves() {
             moveSet.push(rows[locationLetter + 1] + (Number(locationNumber) + forward))
         }
     }
-    console.log('legal move sets:', moveSet)
+
     return moveSet
 }
 
@@ -73,12 +196,16 @@ function squareClick() {
         if (canSelect(this.getAttribute('data-content'))) {
             selected = selectFromBoard(this.id)
             this.classList.add('selected')
+            if (showMoves) {
+                highlightMoves()
+            }
         }
     }
     else if (this.id == selected.currentLoc.join('')) {
         // Unselect element if already selected
         this.classList.remove('selected')
         selected = null
+        unHighlightMoves()
     }
     else {
         // Try to move
@@ -115,8 +242,12 @@ function executeMove(endLoc) {
     selected.currentLoc[0] = endLoc[0]
     selected.currentLoc[1] = endLoc[1]
 
-    // Make sure there is no selection
+    // Make sure there is no selection or highlights
     selected = null
+    unHighlightMoves()
+
+    // Update captured pieces
+    updateCapturedPieces()
 
     // Update turn count
     turnCount += 1
@@ -127,5 +258,57 @@ function executeMove(endLoc) {
 }
 
 function checkSpot(location) {
-    return document.getElementById(location).getAttribute('data-content')
+    let elem = document.getElementById(location)
+    return elem ? elem.getAttribute('data-content') : ''
 } 
+
+function spaceEmptyOrEnemy(loc) {
+    return spaceEmpty(loc) || spaceEnemy(loc)
+}
+
+function spaceEmpty(loc) {
+    return !checkSpot(loc) 
+}
+
+function spaceEnemy(loc) {
+    let spot = checkSpot(loc) || ''
+    let color = turnCount % 2 === 0 ? 'w' : 'b'
+    return spot && spot[0] !== color
+}
+
+function highlightMoves() {
+    let moveSet = []
+    if (selected.name === 'pawn') {
+        moveSet = getLegalPawnMoves()   
+    }
+    else if (selected.name === 'knight') {
+        moveSet = getLegalKnightMoves()
+    }
+    else if (selected.name === 'rook') {
+        moveSet = getLegalRookMoves()
+    }
+
+    if (moveSet.length) {
+        moveSet.forEach(m => {
+            document.getElementById(m).classList.add('highlight')
+        })
+    }
+}
+
+function unHighlightMoves() {
+    let boardDivs = document.querySelectorAll('#board div')
+    for (let i = 0; i < boardDivs.length; i++) {
+        boardDivs[i].classList.remove('highlight')
+    }
+}
+
+function updateCapturedPieces() {
+    let capturedDisplay = document.getElementById('captured')
+    capturedDisplay.textContent = ''
+    for (let i = 0; i < capturedPieces.length; i++) {
+        let newSpan = document.createElement('span')
+        newSpan.textContent = pieces[capturedPieces[i].abbrev]
+        capturedDisplay.append(newSpan)
+    }
+    
+}

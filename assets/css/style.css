@@ -2,6 +2,21 @@
     display: inline-block;
 }
 
+#header,
+#header div {
+    display: inline-block;
+}
+
+#title,
+#options,
+#avatar {
+    width: 300px;
+}
+
+#avatar {
+    text-align: right;
+}
+
 #game {
     min-width: 950px;   
 }
@@ -83,4 +98,12 @@
 
 .selected {
     background-color: chartreuse !important;
+}
+
+.highlight {
+    background-color: dodgerblue !important;
+}
+
+#captured {
+    font-size: 48px;
 }
