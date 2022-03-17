@@ -95,6 +95,9 @@ function highlightMoves() {
     else if (selected.name === 'rook') {
         moveSet = getLegalRookMoves()
     }
+    else if (selected.name === 'bishop') {
+        moveSet = getLegalBishopMoves()
+    }
 
     if (moveSet.length) {
         moveSet.forEach(m => {
