@@ -16,25 +16,7 @@ function canSelect(loc) {
 
 function isLegalMove(endLoc) {
     // check if the move is legal based on the piece
-    if (selected.name == 'pawn') {
-        let moveSet = getLegalPawnMoves()
-        return moveSet.includes(endLoc) ? true : false 
-    }
-    else if (selected.name == 'knight') {
-        let moveSet = getLegalKnightMoves()
-        return moveSet.includes(endLoc) ? true : false
-    }
-    else if (selected.name == 'rook') {
-        let moveSet = getLegalRookMoves()
-        return moveSet.includes(endLoc) ? true : false
-    }
-    else if (selected.name == 'bishop') {
-        let moveSet = getLegalBishopMoves()
-        return moveSet.includes(endLoc) ? true : false
-    }
-    else {
-        return true 
-    }
+    return getMoveSet().includes(endLoc) ? true : false 
 }
 
 function getLegalBishopMoves() {
@@ -120,14 +102,13 @@ function getLegalBishopMoves() {
         j--
     }
 
-    console.log('bishop legal moves')
     return moveSet
 }
 
-function getLegalRookMoves() {
+function getLegalRookMoves(locLet, locNum) {
     let moveSet = []
-    let locationLetter = reverseRows[selected.currentLoc[0]]
-    let locationNumber = selected.currentLoc[1]
+    let locationLetter = locLet || reverseRows[selected.currentLoc[0]]
+    let locationNumber = locNum || selected.currentLoc[1]
     
     // Check up
     for (let i = Number(locationNumber); i < 8; i++) {
@@ -243,12 +224,7 @@ function getLegalPawnMoves() {
     let moveSet = []
     let locationLetter = reverseRows[selected.currentLoc[0]]
     let locationNumber = selected.currentLoc[1]
-    let forward = 1
-
-    if (selected.color == 'white') {
-        // Forward is down
-        forward = -1
-    }
+    let forward = selected.color == 'white' ? -1 : 1 
 
     // Check forward spot empty
     let newLocation = rows[locationLetter] + (Number(locationNumber) + forward)
@@ -265,6 +241,16 @@ function getLegalPawnMoves() {
     }
 
     // Check diagonals
+    return moveSet.concat(getPawnAttackMoves())
+}
+
+function getPawnAttackMoves() {
+    let moveSet = []
+    let locationLetter = reverseRows[selected.currentLoc[0]]
+    let locationNumber = selected.currentLoc[1]
+    let forward = selected.color == 'white' ? -1 : 1 
+
+    // Check diagonals
     if (locationLetter != 1) {
         let diag1 = checkSpot(rows[locationLetter - 1] + (Number(locationNumber) + forward))
         if (diag1 && diag1[0] !== selected.color[0]) {
@@ -276,6 +262,24 @@ function getLegalPawnMoves() {
         if (diag2 && diag2[0] !== selected.color[0]) {
             moveSet.push(rows[locationLetter + 1] + (Number(locationNumber) + forward))
         }
+    }
+
+    return moveSet
+}
+
+function getMoveSet() {
+    let moveSet = []
+    if (selected.name == 'pawn') {
+        moveSet = getLegalPawnMoves()
+    }
+    else if (selected.name == 'knight') {
+        moveSet = getLegalKnightMoves()
+    }
+    else if (selected.name == 'rook') {
+        moveSet = getLegalRookMoves()
+    }
+    else if (selected.name == 'bishop') {
+        moveSet = getLegalBishopMoves()
     }
 
     return moveSet

@@ -10,6 +10,7 @@ let blackTime = 0
 let whiteTimer = null
 let blackTimer = null
 let showMoves = true
+let checkState = null
 
 // Draw initial board state
 drawBoard(boardState)

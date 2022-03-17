@@ -1,5 +1,5 @@
 function squareClick() {
-    console.log('clicked on', this.id, 'selected is', selected)
+    // console.log('clicked on', this.id, 'selected is', selected)
     if (!selected) {
         if (canSelect(this.getAttribute('data-content'))) {
             selected = selectFromBoard(this.id)
@@ -21,7 +21,7 @@ function squareClick() {
             executeMove(this.id)
         }
         else {
-            console.log(`Fool you can't move there.`)
+            document.getElementById('message').textContent = `You can't move there!`
         }
     }
 }
@@ -49,6 +49,12 @@ function executeMove(endLoc) {
     moveOnBoard(selected.currentLoc.join(''), endLoc)
     selected.currentLoc[0] = endLoc[0]
     selected.currentLoc[1] = endLoc[1]
+    
+    // Check for a state of check
+    let message = turnCount % 2 === 1 ? 'Go White!' : 'Go Black!'
+    if (checkForCheck()) {
+        message = turnCount % 2 === 1 ? 'White You Are In Check!' : 'Black You Are In Check!'
+    }
 
     // Make sure there is no selection or highlights
     selected = null
@@ -60,8 +66,7 @@ function executeMove(endLoc) {
     // Update turn count
     turnCount += 1
 
-    // Prompt next user
-    let message = turnCount % 2 === 0 ? 'Go White!' : 'Go Black!'
+    // Prompt next user move
     document.getElementById('message').textContent = message
 }
 
@@ -123,3 +128,38 @@ function updateCapturedPieces() {
     }
     
 }
+
+function checkForCheck() {
+    let opponent = turnCount % 2 === 1 ? 'w' : 'b'
+    let moveSet = getMoveSet()
+    if (selected.name === 'pawn') {
+        moveSet = getPawnAttackMoves()
+    }
+    for(let i = 0; i < moveSet.length; i++) {
+        // If legal move contains the enemy king, player is in check
+        let spot = checkSpot(moveSet[i])
+        if (spot && spot === opponent + 'king') {
+            document.getElementById(moveSet[i]).style.backgroundColor = 'orange'
+            checkState = {
+                piece: selected
+            }
+            return true
+        }
+    }
+
+    return false
+}
+
+// function checkForIndirectCheck() {
+//     let opponent = turnCount % 2 === 1 ? 'w' : 'b'
+//     let self = turnCount % 2 === 0 ? 'w' : 'b'
+//     console.log('indirect check')
+//     // Iterate through board state and see if any king in an enemy moveset
+//     for (let i = 0; i < 8; i++) {
+//         for (let j = 0; j < 8; j++) {
+//             let elem = checkSpot(rows[Number(i)+1] + [Number(j)+1].toString())
+//             // TODO: Check every move set for kings of the opposing player
+//         }
+//     }
+//     return false
+// }
