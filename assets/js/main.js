@@ -27,4 +27,7 @@ document.getElementById('showToggle').addEventListener('click', function() {
     if (!showMoves) {
         unHighlightMoves()
     }
+    else {
+        highlightMoves()
+    }
 })

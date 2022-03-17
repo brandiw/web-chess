@@ -126,6 +126,4 @@ function moveOnBoard(startLoc, endLoc) {
     if (temp) {
         capturedPieces.push(temp)
     }
-
-    console.log('board state is...', boardState)
 }
